@@ -1,6 +1,7 @@
 package com.bsj4444.windowsfloat.View;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bsj4444.windowsfloat.R;
+import com.bsj4444.windowsfloat.service.FloatWindowService;
 
 import java.lang.reflect.Field;
 
@@ -28,9 +30,11 @@ public class FloatWindowSmallView extends LinearLayout {
     private float yDownInScreen;
     private float xInView;
     private float yInView;
+    private Context context;
 
     public FloatWindowSmallView(Context context) {
         super(context);
+        this.context=context;
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         LayoutInflater.from(context).inflate(R.layout.float_window,this);
         View view = findViewById(R.id.small_window_layout);
@@ -61,7 +65,15 @@ public class FloatWindowSmallView extends LinearLayout {
 //                    openBigWindow();
 //                }
                 if(Math.abs(xDownInScreen-xInScreen)<5&&Math.abs(yDownInScreen-yInScreen)<5){
-                    openBigWindow();
+                    if (FloatWindowService.isHome){
+                        openBigWindow();
+                    }
+                    else{
+                        Intent i= new Intent(Intent.ACTION_MAIN);
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        i.addCategory(Intent.CATEGORY_HOME);
+                        context.startActivity(i);
+                    }
                 }
                 break;
             default:break;

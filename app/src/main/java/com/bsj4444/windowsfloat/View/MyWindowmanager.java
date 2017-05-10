@@ -7,11 +7,13 @@ import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bsj4444.windowsfloat.R;
+import com.bsj4444.windowsfloat.service.FloatWindowService;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -170,6 +172,15 @@ public class MyWindowmanager {
             }
             else{
                 imageView.setImageResource(acImage[precent-72]);
+            }
+            //当不在桌面时
+            if (!FloatWindowService.isHome){
+                percentView.setVisibility(View.GONE);
+                imageView.setAlpha(0.2f);
+            }
+            else{
+                percentView.setVisibility(View.VISIBLE);
+                imageView.setAlpha(1f);
             }
         }
     }

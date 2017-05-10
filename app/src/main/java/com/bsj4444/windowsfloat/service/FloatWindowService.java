@@ -25,6 +25,7 @@ public class FloatWindowService extends Service {
 
     private Handler handler = new Handler();
     private Timer timer;
+    public static boolean isHome;
 
     @Nullable
     @Override
@@ -36,7 +37,7 @@ public class FloatWindowService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if(timer == null){
             timer = new Timer();
-            timer.scheduleAtFixedRate(new RefreshTask(),0,500);//开启定时器，没0.5秒刷新一次
+            timer.scheduleAtFixedRate(new RefreshTask(),0,500);//开启定时器，每0.5秒刷新一次
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -52,7 +53,14 @@ public class FloatWindowService extends Service {
 
         @Override
         public void run() {
-            if (isHome()&& !MyWindowmanager.isWindowShowing()){
+
+            isHome=isHome();
+
+            /**
+             * 在桌面，没窗口显示
+             * 创建小窗口
+             * */
+            if (isHome&& !MyWindowmanager.isWindowShowing()){
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -60,16 +68,24 @@ public class FloatWindowService extends Service {
                     }
                 });
             }
-            else if(!isHome()&&MyWindowmanager.isWindowShowing()){
+            /**
+             * 不在桌面，有窗口显示
+             *
+             * */
+            else if(!isHome&&MyWindowmanager.isWindowShowing()){
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        MyWindowmanager.removeSmallWindow(getApplicationContext());
+                        MyWindowmanager.updateUsedPercent(getApplicationContext());
                         MyWindowmanager.removeBigWindow(getApplicationContext());
                     }
                 });
             }
-            else if(isHome()&&MyWindowmanager.isWindowShowing()){
+            /**
+             * 在桌面，有窗口显示
+             * 更新小窗口内存百分比
+             * */
+            else if(isHome&&MyWindowmanager.isWindowShowing()){
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -104,4 +120,6 @@ public class FloatWindowService extends Service {
         }
         return names;
     }
+
+
 }
