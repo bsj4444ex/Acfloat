@@ -35,6 +35,7 @@ public class MyWindowmanager {
     private static WindowManager mWindowManager;
     private static ActivityManager mActivityManager;
     private static PackageManager mPackageManager;
+    public static Float windowsAlpha=0.2f;
 
     private static int[] acImage={
                 R.drawable.ac_1,R.drawable.ac_2,R.drawable.ac_3,R.drawable.ac_4,
@@ -176,7 +177,7 @@ public class MyWindowmanager {
             //当不在桌面时
             if (!FloatWindowService.isHome){
                 percentView.setVisibility(View.GONE);
-                imageView.setAlpha(0.2f);
+                imageView.setAlpha(windowsAlpha);
             }
             else{
                 percentView.setVisibility(View.VISIBLE);

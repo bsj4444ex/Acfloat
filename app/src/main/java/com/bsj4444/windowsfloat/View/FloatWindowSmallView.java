@@ -2,6 +2,7 @@ package com.bsj4444.windowsfloat.View;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.bsj4444.windowsfloat.R;
 import com.bsj4444.windowsfloat.service.FloatWindowService;
+import com.bsj4444.windowsfloat.util.Util2;
 
 import java.lang.reflect.Field;
 
@@ -48,6 +50,7 @@ public class FloatWindowSmallView extends LinearLayout {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
+                Log.d("bei2","down");
                 xInView = event.getX();
                 yInView = event.getY();
                 xDownInScreen = event.getRawX();
@@ -56,23 +59,35 @@ public class FloatWindowSmallView extends LinearLayout {
                 yInScreen = event.getRawY()-getStatusBarHeight();
                 break;
             case MotionEvent.ACTION_MOVE:
+                Log.d("bei2","move");
                 xInScreen = event.getRawX();
                 yInScreen = event.getRawY()-getStatusBarHeight();
                 updateViewPosition();
                 break;
             case MotionEvent.ACTION_UP:
+                Log.d("bei2","up");
+                long time=event.getEventTime()-event.getDownTime();
 //                if(xDownInScreen == xInScreen&&yDownInScreen==yInScreen){
 //                    openBigWindow();
 //                }
-                if(Math.abs(xDownInScreen-xInScreen)<5&&Math.abs(yDownInScreen-yInScreen)<5){
-                    if (FloatWindowService.isHome){
-                        openBigWindow();
+                Log.d("bei2",time+"");
+                if(time<=300){
+                    if(Math.abs(xDownInScreen-xInScreen)<5&&Math.abs(yDownInScreen-yInScreen)<5){
+                        if (FloatWindowService.isHome){
+                            openBigWindow();
+                        }
+                        else{
+                            Intent i= new Intent(Intent.ACTION_MAIN);
+                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            i.addCategory(Intent.CATEGORY_HOME);
+                            context.startActivity(i);
+                        }
                     }
-                    else{
-                        Intent i= new Intent(Intent.ACTION_MAIN);
-                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        i.addCategory(Intent.CATEGORY_HOME);
-                        context.startActivity(i);
+                }
+                else{
+                    if (Math.abs(xDownInScreen-xInScreen)<5&&Math.abs(yDownInScreen-yInScreen)<5){
+                        Log.d("bei2","longan");
+                        Util2.showRecentlyApp();
                     }
                 }
                 break;

@@ -82,6 +82,18 @@ public class FloatWindowService extends Service {
                 });
             }
             /**
+             * 不在桌面，没窗口显示
+             *
+             * */
+            else if(!isHome&&!MyWindowmanager.isWindowShowing()){
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        MyWindowmanager.createSmallWindow(getApplicationContext());
+                    }
+                });
+            }
+            /**
              * 在桌面，有窗口显示
              * 更新小窗口内存百分比
              * */
